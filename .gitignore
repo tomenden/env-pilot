@@ -1,0 +1,4 @@
+envsetup
+*.exe
+.env
+dist/

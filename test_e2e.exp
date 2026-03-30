@@ -1,0 +1,158 @@
+#!/usr/bin/expect -f
+# E2E test for envsetup (master-detail bubbletea UI)
+
+set timeout 10
+set binary [lindex $argv 0]
+set testdir [lindex $argv 1]
+
+file delete "$testdir/.env"
+
+puts "\n=== Test 1: --status with no .env ==="
+spawn $binary --from "$testdir/.env.example" --out "$testdir/.env" --status
+expect {
+    "11 total, 0 set, 0 skipped, 11 remaining" { puts "  PASS: correct counts" }
+    timeout { puts "  FAIL: timeout"; exit 1 }
+}
+wait
+
+puts "\n=== Test 2: Master-detail interactive setup ==="
+spawn $binary --from "$testdir/.env.example" --out "$testdir/.env"
+
+# Dashboard — press Enter (Start setup is selected by default)
+expect "Start setup"
+send "\r"
+
+# Now on main screen, cursor at DATABASE_URL
+# Press Tab to edit, then Enter to accept default
+expect "DATABASE_URL"
+send "\t"
+sleep 0.2
+send "\r"
+
+# Cursor advances to DB_POOL_SIZE — Tab + Enter for default
+expect "DB_POOL_SIZE"
+send "\t"
+sleep 0.2
+send "\r"
+
+# JWT_SECRET — Tab, type value, Enter, then Enter to confirm
+expect "JWT_SECRET"
+send "\t"
+sleep 0.2
+send "my-secret-jwt-key-abc123\r"
+# Confirm sensitive value
+expect "accept"
+send "\r"
+
+# OAUTH_CLIENT_ID — press 's' to skip (in navigate mode)
+expect "OAUTH_CLIENT_ID"
+send "s"
+
+# OAUTH_CLIENT_SECRET — skip
+expect "OAUTH_CLIENT_SECRET"
+send "s"
+
+# OPENAI_API_KEY — Tab, type, Enter, confirm
+expect "OPENAI_API_KEY"
+send "\t"
+sleep 0.2
+send "sk-test-key-1234567890\r"
+expect "accept"
+send "\r"
+
+# STRIPE_SECRET_KEY — skip
+expect "STRIPE_SECRET_KEY"
+send "s"
+
+# SENTRY_DSN — Tab + Enter for default
+expect "SENTRY_DSN"
+send "\t"
+sleep 0.2
+send "\r"
+
+# PORT — Tab + Enter for default
+expect "PORT"
+send "\t"
+sleep 0.2
+send "\r"
+
+# LOG_LEVEL — Tab, type "info", Enter
+expect "LOG_LEVEL"
+send "\t"
+sleep 0.2
+send "info\r"
+
+# DEBUG — Tab, type "false", Enter
+expect "DEBUG"
+send "\t"
+sleep 0.2
+send "false\r"
+
+# Now press 'w' to write & go to Done screen
+sleep 0.3
+send "w"
+
+# Done screen — press Enter for Done (first option)
+expect "keys set"
+send "\r"
+
+expect eof
+wait
+
+puts "\n=== Test 3: Verify .env contents ==="
+set fp [open "$testdir/.env" r]
+set content [read $fp]
+close $fp
+puts "--- .env contents ---"
+puts $content
+puts "---"
+
+set checks {
+    "DATABASE_URL=postgres://localhost:5432/myapp_dev"
+    "DB_POOL_SIZE=10"
+    "JWT_SECRET=my-secret-jwt-key-abc123"
+    "# envsetup:skipped"
+    "OPENAI_API_KEY=sk-test-key-1234567890"
+    "PORT=3000"
+    "LOG_LEVEL=info"
+    "DEBUG=false"
+}
+
+set all_pass 1
+foreach check $checks {
+    if {[string first $check $content] >= 0} {
+        puts "  PASS: found '$check'"
+    } else {
+        puts "  FAIL: missing '$check'"
+        set all_pass 0
+    }
+}
+
+puts "\n=== Test 4: --status after setup ==="
+spawn $binary --from "$testdir/.env.example" --out "$testdir/.env" --status
+expect {
+    -re {(\d+) total, (\d+) set, (\d+) skipped, (\d+) remaining} {
+        set total $expect_out(1,string)
+        set setcount $expect_out(2,string)
+        set skipped $expect_out(3,string)
+        puts "  Got: $total total, $setcount set, $skipped skipped"
+        if {$setcount >= 7} {
+            puts "  PASS: keys persisted"
+        } else {
+            puts "  FAIL: expected >= 7 set, got $setcount"
+            set all_pass 0
+        }
+    }
+    timeout { puts "  FAIL: timeout"; set all_pass 0 }
+}
+wait
+
+file delete "$testdir/.env"
+
+if {$all_pass} {
+    puts "\n✅ All tests passed!\n"
+    exit 0
+} else {
+    puts "\n❌ Some tests failed.\n"
+    exit 1
+}
