@@ -1,0 +1,39 @@
+{
+  "name": "env-pilot",
+  "version": "0.0.0",
+  "description": "Interactive TUI for setting up .env files from a template",
+  "bin": {
+    "env-pilot": "run.js"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "keywords": [
+    "env",
+    "dotenv",
+    "environment",
+    "setup",
+    "tui",
+    "cli",
+    "interactive",
+    "env-example"
+  ],
+  "author": "Tom Enden",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tomenden/env-pilot"
+  },
+  "homepage": "https://github.com/tomenden/env-pilot#readme",
+  "bugs": {
+    "url": "https://github.com/tomenden/env-pilot/issues"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "engines": {
+    "node": ">=14"
+  }
+}

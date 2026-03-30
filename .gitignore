@@ -2,3 +2,4 @@ env-pilot
 *.exe
 .env
 dist/
+npm/bin/

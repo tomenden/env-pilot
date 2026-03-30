@@ -16,14 +16,26 @@ Interactive TUI for setting up `.env` files from a template. No more copying `.e
 ## Install
 
 ```bash
-cd env-pilot && go build -o env-pilot .
+npm install -g env-pilot
 ```
 
-Move the binary somewhere on your `$PATH` to use it anywhere:
+Or run without installing:
 
 ```bash
-mv env-pilot /usr/local/bin/
+npx env-pilot
 ```
+
+<details>
+<summary>Other install methods</summary>
+
+**From GitHub Releases** — download the binary for your platform from [Releases](https://github.com/tomenden/env-pilot/releases).
+
+**From source** — requires Go 1.21+:
+```bash
+go build -o env-pilot . && mv env-pilot /usr/local/bin/
+```
+
+</details>
 
 ## Quick start
 
