@@ -1,31 +1,38 @@
-# envsetup
+# env-pilot
 
 Interactive TUI for setting up `.env` files from a template. No more copying `.env.example` and filling in values by hand in a text editor.
+
+![env-pilot demo](screenshots/demo.gif)
+
+<details>
+<summary>Screenshots</summary>
 
 ![Main view — editing a normal key](screenshots/main-normal.png)
 
 ![Main view — editing a sensitive key](screenshots/main-sensitive.png)
 
+</details>
+
 ## Install
 
 ```bash
-cd envsetup && go build -o envsetup .
+cd env-pilot && go build -o env-pilot .
 ```
 
 Move the binary somewhere on your `$PATH` to use it anywhere:
 
 ```bash
-mv envsetup /usr/local/bin/
+mv env-pilot /usr/local/bin/
 ```
 
 ## Quick start
 
 ```bash
 cd your-project
-envsetup
+env-pilot
 ```
 
-That's it. envsetup auto-detects your template file, opens a master-detail TUI, and writes to `.env`.
+That's it. env-pilot auto-detects your template file, opens a master-detail TUI, and writes to `.env`.
 
 ## How it works
 
@@ -53,11 +60,11 @@ When editing a **sensitive key** (passwords, API keys, tokens), input is masked.
 ## CLI flags
 
 ```bash
-envsetup                        # Auto-detect template, interactive TUI
-envsetup --from .env.template   # Use a specific template file
-envsetup --out .env.local       # Write to a different output file
-envsetup --status               # Print counts and exit (non-interactive)
-envsetup --review               # Print all keys with status and exit
+env-pilot                        # Auto-detect template, interactive TUI
+env-pilot --from .env.template   # Use a specific template file
+env-pilot --out .env.local       # Write to a different output file
+env-pilot --status               # Print counts and exit (non-interactive)
+env-pilot --review               # Print all keys with status and exit
 ```
 
 | Flag | Description |
@@ -69,11 +76,11 @@ envsetup --review               # Print all keys with status and exit
 
 ## Template file format
 
-envsetup reads standard `.env` template files — the same `KEY=VALUE` format used by [dotenv](https://github.com/motdotla/dotenv), [Laravel](https://laravel.com/docs/configuration), [Docker Compose](https://docs.docker.com/compose/environment-variables/), and virtually every framework.
+env-pilot reads standard `.env` template files — the same `KEY=VALUE` format used by [dotenv](https://github.com/motdotla/dotenv), [Laravel](https://laravel.com/docs/configuration), [Docker Compose](https://docs.docker.com/compose/environment-variables/), and virtually every framework.
 
 ### Auto-detection
 
-When run without `--from`, envsetup looks for these files in order:
+When run without `--from`, env-pilot looks for these files in order:
 
 1. `.env.example`
 2. `.env.sample`
@@ -87,7 +94,7 @@ When run without `--from`, envsetup looks for these files in order:
 # Standard key-value pair
 DATABASE_URL=postgres://localhost:5432/mydb
 
-# Empty value (envsetup will prompt for it)
+# Empty value (env-pilot will prompt for it)
 API_KEY=
 
 # Placeholder values are detected and NOT treated as defaults
@@ -95,9 +102,6 @@ OAUTH_CLIENT_ID=your-client-id-here
 
 # Quoted values are supported
 PASSWORD='my$pecial&value'
-
-# export prefix is stripped
-export NODE_ENV=development
 ```
 
 - Keys with a non-empty, non-placeholder value are shown as **defaults** — press Enter to accept them
@@ -117,7 +121,7 @@ This shows "PostgreSQL connection string for the app database" as context when e
 
 ### Sections
 
-There is no formal standard for sections in `.env` files. envsetup detects sections using the conventions most commonly found in real-world projects:
+There is no formal standard for sections in `.env` files. env-pilot detects sections using the conventions most commonly found in real-world projects:
 
 **Pattern 1: Comment + blank line** (most common — used by Laravel, Mastodon, Supabase, etc.)
 
@@ -166,44 +170,13 @@ Lines containing `──`, `===`, `---`, or `###` are recognized as section head
 
 ### Skip markers
 
-When you skip a key, envsetup writes a `# envsetup:skipped` comment above it in the output `.env`:
+When you skip a key, env-pilot writes a `# env-pilot:skipped` comment above it in the output `.env`:
 
 ```bash
-# envsetup:skipped
+# env-pilot:skipped
 OAUTH_CLIENT_ID=
 ```
 
-This marker is recognized on subsequent runs so envsetup knows you intentionally skipped it (vs. simply haven't gotten to it yet). Use `r` to reset a key and clear its skip status.
-
-## Example
-
-Given this `.env.example`:
-
-```bash
-# Database
-# PostgreSQL connection string
-DATABASE_URL=postgres://localhost:5432/mydb
-
-# External APIs
-# API key for OpenAI
-OPENAI_API_KEY=
-```
-
-Running `envsetup` opens the TUI:
-
-```
-  .env.example → .env                         ✓ 0 set  ⏭ 0 skipped  ○ 2 remaining
-Database                │  DATABASE_URL
- ▸ ○ DATABASE_URL  …    │
-   ○ OPENAI_API_K… …    │  PostgreSQL connection string
-                        │
-External APIs           │  Default: postgres://localhost:5432/mydb
-                        │
-                        │  Status: not set
-                        │
-                        │  Press [tab] or [enter] to edit
-                        │
-  ↑↓ navigate   ⇥ edit   [s]kip   [r]eset   [w]rite & exit   [q]uit
-```
+This marker is recognized on subsequent runs so env-pilot knows you intentionally skipped it (vs. simply haven't gotten to it yet). Use `r` to reset a key and clear its skip status.
 
 Navigate with arrow keys, press Tab to edit, Enter to accept defaults or submit values. Changes are saved to `.env` automatically.

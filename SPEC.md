@@ -1,4 +1,4 @@
-# envsetup — Guided .env Setup CLI
+# env-pilot — Guided .env Setup CLI
 
 ## Problem
 
@@ -37,7 +37,7 @@ A CLI that reads a `.env.example` (or similar template) and walks you through fi
 On launch, show a summary dashboard:
 
 ```
-envsetup — reading from .env.example
+env-pilot — reading from .env.example
 
   12 keys total
    4 already set in .env
@@ -148,11 +148,11 @@ From review, user can type a key name (or number) to jump directly to it and cha
 ## CLI Interface
 
 ```
-envsetup                    # Auto-detect template, interactive setup
-envsetup --from .env.local  # Explicit template file
-envsetup --out .env.local   # Write to a specific output file
-envsetup --review           # Jump straight to review mode
-envsetup --status           # Print summary (how many set/missing) and exit
+env-pilot                    # Auto-detect template, interactive setup
+env-pilot --from .env.local  # Explicit template file
+env-pilot --out .env.local   # Write to a specific output file
+env-pilot --review           # Jump straight to review mode
+env-pilot --status           # Print summary (how many set/missing) and exit
 ```
 
 ### Flags
@@ -219,7 +219,7 @@ The tool needs to track "skipped" status between sessions. Two options:
 
 **Option A: Comment marker in `.env`**
 ```bash
-# envsetup:skipped
+# env-pilot:skipped
 OAUTH_CLIENT_ID=
 ```
 

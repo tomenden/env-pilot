@@ -116,7 +116,7 @@ func parseExisting(path string) (map[string]string, map[string]bool, error) {
 		line := scanner.Text()
 		trimmed := strings.TrimSpace(line)
 
-		if trimmed == "# envsetup:skipped" {
+		if trimmed == "# env-pilot:skipped" {
 			nextSkipped = true
 			continue
 		}

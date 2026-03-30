@@ -14,7 +14,7 @@ func main() {
 	review := flag.Bool("review", false, "Show review screen")
 	status := flag.Bool("status", false, "Print key counts and exit (non-interactive)")
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: envsetup [flags]\n\n")
+		fmt.Fprintf(os.Stderr, "Usage: env-pilot [flags]\n\n")
 		fmt.Fprintf(os.Stderr, "Guided, interactive .env file setup from a template.\n\n")
 		flag.PrintDefaults()
 	}

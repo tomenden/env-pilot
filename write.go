@@ -12,7 +12,7 @@ func writeEnv(s *State) error {
 
 	for _, v := range s.Vars {
 		if s.Skipped[v.Name] {
-			b.WriteString("# envsetup:skipped\n")
+			b.WriteString("# env-pilot:skipped\n")
 		}
 
 		val := s.Values[v.Name]

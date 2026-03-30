@@ -1,4 +1,4 @@
-envsetup
+env-pilot
 *.exe
 .env
 dist/

@@ -1,5 +1,5 @@
 #!/usr/bin/expect -f
-# E2E test for envsetup (master-detail bubbletea UI)
+# E2E test for env-pilot (master-detail bubbletea UI)
 
 set timeout 10
 set binary [lindex $argv 0]
@@ -111,7 +111,7 @@ set checks {
     "DATABASE_URL=postgres://localhost:5432/myapp_dev"
     "DB_POOL_SIZE=10"
     "JWT_SECRET=my-secret-jwt-key-abc123"
-    "# envsetup:skipped"
+    "# env-pilot:skipped"
     "OPENAI_API_KEY=sk-test-key-1234567890"
     "PORT=3000"
     "LOG_LEVEL=info"

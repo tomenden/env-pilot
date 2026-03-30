@@ -1,4 +1,4 @@
-module envsetup
+module env-pilot
 
 go 1.24.2
 
