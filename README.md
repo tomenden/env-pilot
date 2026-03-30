@@ -16,13 +16,13 @@ Interactive TUI for setting up `.env` files from a template. No more copying `.e
 ## Install
 
 ```bash
-npm install -g env-pilot
+npm install -g @tomenden/env-pilot
 ```
 
 Or run without installing:
 
 ```bash
-npx env-pilot
+npx @tomenden/env-pilot
 ```
 
 <details>

@@ -1,5 +1,5 @@
 {
-  "name": "env-pilot",
+  "name": "@tomenden/env-pilot",
   "version": "0.0.0",
   "description": "Interactive TUI for setting up .env files from a template",
   "bin": {
