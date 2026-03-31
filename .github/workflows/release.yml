@@ -42,9 +42,10 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org
 
-      - name: Set version from tag
+      - name: Prepare npm package
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
+          cp README.md npm/README.md
           cd npm
           npm version "$VERSION" --no-git-tag-version
 
